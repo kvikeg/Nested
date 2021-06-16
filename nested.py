@@ -11,9 +11,9 @@ def build_model():
     model.add(layers.Flatten(input_shape=[28, 28], name='input')) 
     model.add(layers.BatchNormalization())
     model.add(layers.Dense(300, activation='relu', kernel_initializer="he_normal", name="hidden_1"))
-    #model.add(layers.BatchNormalization())
+    model.add(layers.BatchNormalization())
     model.add(layers.Dense(100, activation='relu', kernel_initializer="he_normal", name="hidden_2"))
-    #model.add(layers.BatchNormalization())
+    model.add(layers.BatchNormalization())
     model.add(layers.Dense(10, activation='softmax', name="output"))
     return model
 
@@ -31,8 +31,8 @@ if __name__ == "__main__":
 
         optimizer = tf.keras.optimizers.SGD(lr=0.01, momentum=0.9, nesterov=True)
         model.compile(optimizer, loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-
         checkpoint_cb = keras.callbacks.ModelCheckpoint("my_keras_model.h5", save_best_only=True)
+
         early_stopping_cb = keras.callbacks.EarlyStopping(patience=10, restore_best_weights=True)
         #history = model.fit(X_train, Y_train, epochs=40, validation_split=5/60, callbacks=[checkpoint_cb, early_stopping_cb])
         history = model.fit(X_train, Y_train, epochs=40, validation_split=5/60)
@@ -41,4 +41,7 @@ if __name__ == "__main__":
     print("\n\nEvaluation:\n")
     results = model.evaluate(X_test, Y_test, verbose=1)
     print("test loss, test acc:", results)
+
+    predictions = model.predict(X_test[0:1])
+    print("Predictions: ", predictions)
     # the model is ready. 
